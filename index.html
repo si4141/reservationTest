@@ -44,7 +44,7 @@
        },
        mounted () {
          axios
-           .get('http://127.0.0.1:8000/reservationSlot/?format=json')
+           .get('https://waiting-reservation-api.herokuapp.com/reservationSlot/?format=json')
            .then(response => {
              this.items = response.data
              .filter(element => element.remaining > 0)
