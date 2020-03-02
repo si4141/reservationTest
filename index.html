@@ -1,28 +1,62 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>Reactサンプル</title>
-<!--head内でcdnで読み込む。バージョンは適時こちらを参考に調整。
-https://ja.reactjs.org/docs/cdn-links.html-->
-
-  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-</head>
-<body>
-
-<!--コンテンツをここに。-->
-
-<div class="main">
-    <div class="section" id="app1">ここ</div>
-</div>
-
-<!--reactスクリプト。type指定忘れずに-->
-<script type="text/babel">
-  ReactDOM.render(
-    <h1>Hello, world!</h1>,
-    document.getElementById('app1')
-  );
-</script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <title>Vue.js</title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
+    <div id="app">
+      <p>時間を選べ</p>
+      
+      <select>
+        <option v-for="item in items" value="item.start_time_id">{{ item.start_time_label }}</option>
+      </select>
+      <button @click="pushReservation">送信</button>
+      <p>massage: {{ message }}</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/ja.js"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+     new Vue({
+       el: "#app",
+       data () {
+         return {
+           message: 'init',
+           items: []
+         }
+       },
+       methods: {
+         pushReservation () {
+          liff.getProfile()
+            .then(profile => {
+              const name = profile.displayName
+            })
+            .catch((err) => {
+              console.log('error', err);
+            })
+            .then(() => {message = name})
+            ;
+          }
+       },
+       mounted () {
+         axios
+           .get('http://127.0.0.1:8000/reservationSlot/?format=json')
+           .then(response => {
+             this.items = response.data
+             .filter(element => element.remaining > 0)
+             .map(element => {
+               let d_ = moment(element.start_time);
+               element.start_time_id = d_.format("YYYYMMDDHHmm")
+               element.start_time_label =d_.format("M月DD日 HH:mm")
+               return element
+               })
+            })
+       }
+     })
+   </script>
+  </body>
+</html>
