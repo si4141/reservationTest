@@ -37,7 +37,7 @@
             })
             .then(() => {
               this.message += ' then'
-              const idToken = liff.getDecodedIDToken();
+              const idToken = liff.getContext();
               this.message += ' ' + idToken
             })
           }
