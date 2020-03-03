@@ -32,7 +32,7 @@
            message: 'init',
            items: [],
            selected: '',
-           debug: ''
+           debug: 'debug message here: '
          }
        },
        methods: {
@@ -46,8 +46,9 @@
               let context = liff.getContext();
               this.message += ' ' + context.userId
               let userId = context.userId
+              this.debug += 'selected: ' + selected + 'user: ' + userId
               if (selected){
-                this.debug += 'post: ' + selected + 'user: ' + userId
+                this.debug += ' post:'
                 return axios.post(endPoint + 'reservationSlot/' + this.selected, {
                   'userId': userId
                 })
