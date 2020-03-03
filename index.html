@@ -51,7 +51,9 @@
               this.debug += 'selected: ' + selected + 'user: ' + userId
               if (selected){
                 this.debug += ' post:' + selected
-                return axios.post(endPoint + 'reservationSlot/' + selected, {
+                let url = endPoint + 'reservationSlot/' + selected
+                this.debug += ' '+url+' userId: '+userId
+                return axios.post(url, {
                   'userId': userId
                 })
               } else {
