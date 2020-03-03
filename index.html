@@ -47,6 +47,7 @@
               this.message += ' ' + context.userId
               let userId = context.userId
               if (selected){
+                this.debug += 'post: ' + selected + 'user: ' + userId
                 return axios.post(endPoint + 'reservationSlot/' + this.selected, {
                   'userId': userId
                 })
@@ -58,6 +59,7 @@
             })
             .catch((error) => {
               console.error(error)
+              this.debug += error
             })
           }
           // }).getProfile()
