@@ -9,11 +9,14 @@
     <div id="app">
       <p>時間を選べ</p>
       
-      <select>
-        <option v-for="item in items" value="item.start_time_id">{{ item.start_time_label }}</option>
+      <select v-model="selected">
+        <option disabled value="">Select time</option>
+        <option v-for="item in items" :value="item.start_time_id">{{ item.start_time_label }}</option>
       </select>
       <button @click="pushReservation">送信</button>
       <p>massage: {{ message }}</p>
+      <p>selected: {{ selected }}</p>
+      <p>debug message: {{ debug }}</p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -21,12 +24,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/locale/ja.js"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
+      const endPoint = 'https://waiting-reservation-api.herokuapp.com/'
      new Vue({
        el: "#app",
        data () {
          return {
            message: 'init',
-           items: []
+           items: [],
+           selected: '',
+           debug: ''
          }
        },
        methods: {
@@ -37,8 +43,21 @@
             })
             .then(() => {
               this.message += ' then'
-              const idToken = liff.getContext();
-              this.message += ' ' + JSON.stringify(idToken)
+              let context = liff.getContext();
+              this.message += ' ' + context.userId
+              let userId = context.userId
+              if (selected){
+                return axios.post(endPoint + 'reservationSlot/' + this.selected, {
+                  'userId': userId
+                })
+              } else {
+                throw new Error()
+              }
+            }).then(response => {
+              this.debug += response 
+            })
+            .catch((error) => {
+              console.error(error)
             })
           }
           // }).getProfile()
@@ -56,9 +75,8 @@
        },
        mounted () {
          axios
-           .get('https://waiting-reservation-api.herokuapp.com/reservationSlot/?format=json')
+           .get(endPoint + 'reservationSlot/?format=json')
            .then(response => {
-             console.log(response)
              this.items = response.data
              .filter(element => element.remaining > 0)
              .map(element => {
