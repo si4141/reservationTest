@@ -31,21 +31,34 @@
        },
        methods: {
          pushReservation () {
-          liff.getProfile()
-            .then(profile => {
-              const name = profile.displayName
+          liff
+            .init({
+              liffId: '1653882061-9EnNoj6O'
             })
-            .catch((err) => {
-              console.log('error', err);
+            .then(() => {
+              this.message += ' then'
+              const idToken = liff.getDecodedIDToken();
+              this.message += ' ' + idToken
             })
-            .then(() => {message = name})
-            ;
           }
+          // }).getProfile()
+          //   .then(profile => {
+          //     const name = profile.displayName;
+          //     console.log('test')
+          //   })
+          //   .catch((err) => {
+          //     console.log('error', err);
+          //     this.message = 'error'
+          //   })
+          //   .then(() => {this.message = name})
+          //   .catch(() => {this.message = 'error'});
+          // }
        },
        mounted () {
          axios
            .get('https://waiting-reservation-api.herokuapp.com/reservationSlot/?format=json')
            .then(response => {
+             console.log(response)
              this.items = response.data
              .filter(element => element.remaining > 0)
              .map(element => {
