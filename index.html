@@ -44,14 +44,14 @@
             .then(() => {
               this.message += ' then'
               let context = liff.getContext();
-              this.message += ' ' + context.userId
+              // this.message += ' ' + context.userId
               
-              let userId = context.userId
+              // let userId = context.userId
               let selected = this.selected
-              this.debug += 'selected: ' + selected + 'user: ' + userId
+              // this.debug += 'selected: ' + selected + 'user: ' + userId
               if (selected){
-                this.debug += ' post:'
-                return axios.post(endPoint + 'reservationSlot/' + this.selected, {
+                this.debug += ' post:' + selected
+                return axios.post(endPoint + 'reservationSlot/' + selected, {
                   'userId': userId
                 })
               } else {
@@ -62,7 +62,7 @@
             })
             .catch((error) => {
               console.error(error)
-              this.debug += error
+              this.debug += ' '+ error
             })
           }
           // }).getProfile()
