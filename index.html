@@ -38,7 +38,7 @@
             .then(() => {
               this.message += ' then'
               const idToken = liff.getContext();
-              this.message += ' ' + idToken
+              this.message += ' ' + JSON.stringify(idToken)
             })
           }
           // }).getProfile()
