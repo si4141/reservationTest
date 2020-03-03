@@ -47,7 +47,7 @@
               this.message += ' ' + context.userId
               let userId = context.userId
               this.debug += 'selected: ' + selected + 'user: ' + userId
-              if (selected){
+              if (this.selected){
                 this.debug += ' post:'
                 return axios.post(endPoint + 'reservationSlot/' + this.selected, {
                   'userId': userId
